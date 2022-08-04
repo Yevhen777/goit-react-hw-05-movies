@@ -38,7 +38,6 @@ export const Home = () => {
           <ul>
             {movies.map(movie => (
               <li key={movie.id}>
-                {/* <infoMovies id={movie.id} /> */}
                 <NavLink to={`/movies/${movie.id}`}>{movie.title}</NavLink>
               </li>
             ))}
@@ -46,10 +45,5 @@ export const Home = () => {
         )}
       </div>
     </div>
-
-    //    <img
-    //     src={'https://image.tmdb.org/t/p/w300' + movieData.poster_path}
-    //     alt="film poster"
-    //   />
   );
 };

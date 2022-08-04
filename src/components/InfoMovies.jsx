@@ -1,9 +1,7 @@
 import axios from 'axios';
-// import { Home } from '../pages/Home';
-// import { link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useParams, NavLink, Outlet } from 'react-router-dom';
-
+import { TiArrowLeft } from 'react-icons/ti';
 export const InfoMovies = () => {
   const [info, setInfo] = useState(false);
   const { id } = useParams();
@@ -30,14 +28,24 @@ export const InfoMovies = () => {
     <div>
       {info && (
         <div>
+          <NavLink to={`/`}>
+            <button>
+              <TiArrowLeft />
+              Go back
+            </button>
+          </NavLink>
+
           <div>{info.title}</div>
+
           <img
             src={'https://image.tmdb.org/t/p/w300' + info.poster_path}
             alt="film poster"
           />
         </div>
       )}
+      <p>Additional information</p>
       <NavLink to={`cast`}>Cast</NavLink>
+      <NavLink to={`reviews`}>Reviews</NavLink>
       <Outlet />
     </div>
   );

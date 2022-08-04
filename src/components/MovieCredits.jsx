@@ -3,15 +3,13 @@ import { useParams } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 
-// https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>&language=en-US
-
 export const MovieCredits = () => {
   const [actors, setActors] = useState(false);
+  console.log(actors);
+
   const { id } = useParams();
-  console.log('cast id :>> ', id);
 
   useEffect(() => {
-    console.log('useEffect');
     const myKey = '7deaebc33c33e451d965c0906173f1c4';
     const fetchRes = async () => {
       const res = await axios
@@ -19,8 +17,7 @@ export const MovieCredits = () => {
           `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${myKey}&language=en-US`
         )
         .then(actor => {
-          console.log(actor);
-          setActors(actor);
+          setActors(actor.data.cast);
         })
         .catch(error => new Error(error));
 
@@ -31,8 +28,20 @@ export const MovieCredits = () => {
   }, [id]);
   return (
     <div>
-      <p>123</p>
-      {actors && <div>asd</div>}
+      <ul>
+        {actors &&
+          actors.slice(1, 20).map(actor => (
+            <li key={actor.id}>
+              {
+                <img
+                  src={'https://image.tmdb.org/t/p/w200' + actor.profile_path}
+                  alt="actor"
+                />
+              }
+              {actor.name}
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };
