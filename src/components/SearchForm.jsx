@@ -1,11 +1,17 @@
-export const SearchForm = ({ handleSubmit }) => {
+import { Input, Form } from './SharedLayout.styled';
+
+export const SearchForm = ({ handleSubmit, onChange, query }) => {
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          name="query"
+          value={query}
+          onChange={e => onChange(e.target.value)}
+        />
         <button type="submit">Search</button>
-
-        <input type="text" placeholder="Search " name="query" />
-      </form>
+      </Form>
     </>
   );
 };

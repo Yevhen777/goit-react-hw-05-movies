@@ -1,28 +1,27 @@
-import { Routes, Route, NavLink } from 'react-router-dom';
-import { Home } from '../pages/Home';
+import { Routes, Route } from 'react-router-dom';
 import { InfoMovies } from './InfoMovies';
 import { MovieCredits } from './MovieCredits';
 import { MoviesReviews } from './MoviesReviews';
+import { lazy } from 'react';
+import { SharedLayout } from './SharedLayout';
+import { NotFound } from './NotFound';
 
-import { SearchMovies } from '../pages/Movies';
-
-// import { NotFound } from 'path/to/pages/NotFound';
+const Home = lazy(() => import('../pages/Home'));
+const Movies = lazy(() => import('../pages/Movies'));
 
 export const App = () => {
   return (
     <div>
-      <NavLink to="/">Home</NavLink>
-      <NavLink to="/movies">Movies</NavLink>
-
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/movies/:id" element={<InfoMovies />}>
-          <Route path="cast" element={<MovieCredits />} />
-          <Route path="reviews" element={<MoviesReviews />} />
+        <Route path="/" element={<SharedLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/movies/:id" element={<InfoMovies />}>
+            <Route path="cast" element={<MovieCredits />} />
+            <Route path="reviews" element={<MoviesReviews />} />
+          </Route>
+          <Route path="/movies" element={<Movies />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="/movies" element={<SearchMovies />} />
-
-        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
   );

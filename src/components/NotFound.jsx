@@ -1,8 +1,3 @@
-// export const NotFounde = () => {
-//   return (
-//     <div>
-//       alert('Такой страницы не существует');
-//        где именно будем рендерить вродительском компонентеЮнаприме в Movies <Outlet />
-//     </div>
-//   );
-// };
+export const NotFound = () => {
+  return <div>Такой страницы не существует 404 </div>;
+};

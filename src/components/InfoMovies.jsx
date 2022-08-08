@@ -1,10 +1,21 @@
 import axios from 'axios';
+import {
+  ImgContainer,
+  InfoContainer,
+  InfoText,
+  CastLink,
+  InfoActor,
+} from './SharedLayout.styled';
 import { useEffect, useState } from 'react';
 import { useParams, NavLink, Outlet } from 'react-router-dom';
 import { TiArrowLeft } from 'react-icons/ti';
+import { useLocation } from 'react-router-dom';
+
 export const InfoMovies = () => {
   const [info, setInfo] = useState(false);
   const { id } = useParams();
+  const location = useLocation();
+  const backLinkHref = location.state?.from ?? '/movies';
 
   useEffect(() => {
     const myKey = '7deaebc33c33e451d965c0906173f1c4';
@@ -26,26 +37,42 @@ export const InfoMovies = () => {
 
   return (
     <div>
-      {info && (
-        <div>
-          <NavLink to={`/`}>
-            <button>
-              <TiArrowLeft />
-              Go back
-            </button>
+      <ImgContainer>
+        {info && (
+          <NavLink to={backLinkHref}>
+            <TiArrowLeft />
+            Go back
           </NavLink>
+        )}
+      </ImgContainer>
 
-          <div>{info.title}</div>
-
+      {info && (
+        <InfoContainer>
           <img
             src={'https://image.tmdb.org/t/p/w300' + info.poster_path}
             alt="film poster"
           />
-        </div>
+
+          <InfoText>
+            <h2>{info.title}</h2>
+            <p>vote average: {info.vote_average}</p>
+            <h3>Overview</h3>
+            <p>{info.overview}</p>
+            <h3>Genres</h3>
+            {info.genres.map(infoMovie => {
+              return <p key={infoMovie.id}>{infoMovie.name}</p>;
+            })}
+          </InfoText>
+        </InfoContainer>
       )}
-      <p>Additional information</p>
-      <NavLink to={`cast`}>Cast</NavLink>
-      <NavLink to={`reviews`}>Reviews</NavLink>
+
+      <InfoActor>
+        <p>Additional information</p>
+
+        <CastLink to={`cast`}>Cast</CastLink>
+        <CastLink to={`reviews`}>Reviews</CastLink>
+      </InfoActor>
+
       <Outlet />
     </div>
   );

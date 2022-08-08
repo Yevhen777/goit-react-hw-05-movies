@@ -1,21 +1,31 @@
 import axios from 'axios';
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { SearchForm } from '../components/SearchForm';
+import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-export const SearchMovies = () => {
-  const [search, setSearch] = useState([]);
+const Movies = () => {
+  const [search, setSearch] = useState(false);
   const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const location = useLocation();
+  const paramsFilter = searchParams.get('query') ?? '';
 
   useEffect(() => {
+    if (!paramsFilter) {
+      return;
+    }
+
     const myKey = '7deaebc33c33e451d965c0906173f1c4';
     const fetchRes = async () => {
       const res = await axios
         .get(
-          `https://api.themoviedb.org/3/search/movie?api_key=${myKey}&language=en-US&page=1&include_adult=false`
+          `https://api.themoviedb.org/3/search/movie?api_key=${myKey}&query=${paramsFilter}&language=en-US&page=1&include_adult=false`
         )
         .then(movies => {
-          return setSearch(movies);
+          return setSearch(movies.data.results);
         })
         .catch(error => new Error(error));
 
@@ -23,31 +33,44 @@ export const SearchMovies = () => {
     };
 
     fetchRes();
-  }, []);
+  }, [paramsFilter]);
+
   const handleSubmit = e => {
     e.preventDefault();
 
-    const elForm = e.target.elements.query.value;
-    if (query !== elForm && e.target.elements.query.value.trim() !== '') {
-      setQuery(elForm);
-      setSearch([]);
+    const { value } = e.target.elements.query;
+    const lowerValue = value.toLowerCase();
+    value ? setSearchParams({ query: lowerValue }) : setSearchParams({});
 
-      e.target.reset();
-      return;
-    }
+    e.target.reset();
+  };
 
-    if (e.target.elements.query.value.trim() === '') {
-      alert('Введите запрос!');
-      return;
-    }
+  const changeFilter = value => {
+    setSearchParams(value !== '' ? { filter: value } : {});
   };
 
   return (
     <div>
       <div>
-        <SearchForm handleSubmit={handleSubmit} />
+        <SearchForm
+          query={query}
+          handleSubmit={handleSubmit}
+          onChange={setQuery}
+          changeFilter={changeFilter}
+        />
       </div>
-      ;
+      {search &&
+        search.map(el => {
+          return (
+            <li key={el.id}>
+              <NavLink to={`/movies/${el.id}`} state={{ from: location }}>
+                {el.title}
+              </NavLink>
+            </li>
+          );
+        })}
     </div>
   );
 };
+
+export default Movies;

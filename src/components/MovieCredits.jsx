@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
+import { ActorInfo } from './SharedLayout.styled';
 import { useEffect, useState } from 'react';
 
 export const MovieCredits = () => {
   const [actors, setActors] = useState(false);
-  console.log(actors);
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -26,21 +24,28 @@ export const MovieCredits = () => {
 
     fetchRes();
   }, [id]);
+
   return (
     <div>
       <ul>
         {actors &&
-          actors.slice(1, 20).map(actor => (
-            <li key={actor.id}>
-              {
-                <img
-                  src={'https://image.tmdb.org/t/p/w200' + actor.profile_path}
-                  alt="actor"
-                />
-              }
-              {actor.name}
-            </li>
-          ))}
+          actors.slice(1, 20).map(actor => {
+            if (!actor.profile_path) {
+              return actor.profile_path;
+            }
+            return (
+              <ActorInfo key={actor.id}>
+                {
+                  <img
+                    src={'https://image.tmdb.org/t/p/w200' + actor.profile_path}
+                    alt="actor"
+                  />
+                }
+                <p>{actor.name}</p>
+                <p>character: {actor.character}</p>
+              </ActorInfo>
+            );
+          })}
       </ul>
     </div>
   );
