@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   ImgContainer,
   InfoContainer,
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useParams, NavLink, Outlet } from 'react-router-dom';
 import { TiArrowLeft } from 'react-icons/ti';
 import { useLocation } from 'react-router-dom';
+import { getInfoMovies } from '../services';
 
 export const InfoMovies = () => {
   const [info, setInfo] = useState(false);
@@ -18,21 +18,15 @@ export const InfoMovies = () => {
   const backLinkHref = location.state?.from ?? '/movies';
 
   useEffect(() => {
-    const myKey = '7deaebc33c33e451d965c0906173f1c4';
-    const fetchRes = async () => {
-      const res = await axios
-        .get(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${myKey}&language=en-US`
-        )
+    const fetchRes = async id => {
+      getInfoMovies(id)
         .then(movies => {
           setInfo(movies.data);
         })
         .catch(error => new Error(error));
-
-      return res;
     };
 
-    fetchRes();
+    fetchRes(id);
   }, [id]);
 
   return (

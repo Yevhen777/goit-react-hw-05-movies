@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { SearchForm } from '../components/SearchForm';
 import { useSearchParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { getMovies } from '../services';
 
 const Movies = () => {
   const [search, setSearch] = useState(false);
@@ -18,18 +18,12 @@ const Movies = () => {
       return;
     }
 
-    const myKey = '7deaebc33c33e451d965c0906173f1c4';
     const fetchRes = async () => {
-      const res = await axios
-        .get(
-          `https://api.themoviedb.org/3/search/movie?api_key=${myKey}&query=${paramsFilter}&language=en-US&page=1&include_adult=false`
-        )
+      getMovies(paramsFilter)
         .then(movies => {
           return setSearch(movies.data.results);
         })
         .catch(error => new Error(error));
-
-      return res;
     };
 
     fetchRes();
